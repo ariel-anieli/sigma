@@ -1,11 +1,11 @@
 name: "Promote Experimental Rules To Test"
 
 on:
-  #push:
-  #  branches:
-  #      - "*"
-  schedule:
-    - cron: "0 0 1 * *" # At 00:00 on day-of-month 1.
+  push:
+    branches:
+        - "*"
+  #schedule:
+  #  - cron: "0 0 1 * *" # At 00:00 on day-of-month 1.
   
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -21,35 +21,45 @@ jobs:
       uses: actions/setup-python@v4.5.0
       with:
         python-version: 3.11
-    - name: Execute Rule Promoter Script
+    - name: Install dependencies
+      run: pip install --force-reinstall pySigma; pip install --force-reinstall sigma-cli
+    - name: Install a compatible backend
       run: |
-        pip install pySigma
-        python tests/promote_rules_status.py
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v5
-      with:
-        reviewers: nasbench, frack113, phantinuss
-        delete-branch: true
-        commit-message: 'chore: promote older rules status from `experimental` to `test`'
-        branch: 'create-pull-request/rule-promotion'
-        title: 'Promote Older Rules From `experimental` to `test`'
-        body: |
-          ### Summary of the Pull Request
+        BACKEND=`sigma plugin list -t backend -s stable | awk '/\| yes / {print $2}' | xargs shuf -n1 -e`
+        sigma plugin install -f $BACKEND
+        echo "Installed backend $BACKEND"
+    - name: Execute Rule Promoter Script
+      run: python tests/promote_rules_status.py | tee --append promoted_rules
+    - name: Convert artifacts
+      run: |
+        TARGET=`sigma list targets | awk '!/Identifier/ && /\| [a-zA-Z]/ {print $2}' | xargs shuf -n1 -e`
+        PIPELINE=`sigma list pipelines | awk '!/Identifier/ && /\| [a-zA-Z]/ {print $2}' | xargs shuf -n1 -e`
+        cat promoted_rules | xargs -I {} sh -c "echo 'RULE {}, TARGET $TARGET, PIPELINE $PIPELINE'; sigma convert -t $TARGET --pipeline $PIPELINE {}"
+      #- name: Create Pull Request
+        # uses: peter-evans/create-pull-request@v5
+        #with:
+        #reviewers: nasbench, frack113, phantinuss
+        #delete-branch: true
+        #commit-message: 'chore: promote older rules status from `experimental` to `test`'
+        #branch: 'create-pull-request/rule-promotion'
+        #title: 'Promote Older Rules From `experimental` to `test`'
+        #body: |
+        #  ### Summary of the Pull Request
 
-          This PR promotes and upgrade the status of rules that haven't been changed for over 300 days from `experimental` to `test`
+        # This PR promotes and upgrade the status of rules that haven't been changed for over 300 days from `experimental` to `test`
 
           ### Changelog
 
-          chore: promote older rules status from `experimental` to `test`
+        # chore: promote older rules status from `experimental` to `test`
 
           ### Example Log Event
 
-          N/A
+        # N/A
 
           ### Fixed Issues
 
-          N/A
+        # N/A
 
           ### SigmaHQ Rule Creation Conventions
           
-          - If your PR adds new rules, please consider following and applying these [conventions](https://github.com/SigmaHQ/sigma-specification/blob/main/sigmahq/sigmahq_conventions.md)
+        # - If your PR adds new rules, please consider following and applying these [conventions](https://github.com/SigmaHQ/sigma-specification/blob/main/sigmahq/sigmahq_conventions.md)
