@@ -4044,3 +4044,13 @@ https://learn.microsoft.com/en-us/windows/win32/secauthz/security-descriptor-def
 https://learn.microsoft.com/en-us/entra/architecture/security-operations-applications#application-configuration-changes
 https://web.archive.org/web/20230420013146/http://security-research.dyndns.org/pub/slides/FIRST2017/FIRST-2017_Tom-Ueltschi_Sysmon_FINAL_notes.pdf
 https://web.archive.org/web/20230329172447/https://blog.menasec.net/2019/02/threat-hunting-24-microsoft-windows-dns.html
+https://social.technet.microsoft.com/wiki/contents/articles/7535.adfind-command-examples.aspx
+https://www.picussecurity.com/resource/blog/as-rep-roasting-attack-explained-mitre-attack-t1558.004
+https://darkatlas.io/blog/medusa-ransomware-group-opsec-failure
+https://www.loobins.io/binaries/launchctl/
+https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/deploy-appcontrol-policies-with-script
+https://strontic.github.io/xcyclopedia/library/vbc.exe-A731372E6F6978CE25617AE01B143351.html
+https://learn.microsoft.com/en-us/sql/t-sql/statements/alter-server-audit-transact-sql?view=sql-server-ver16
+https://www.group-ib.com/resources/threat-research/red-curl-2.html
+https://learn.microsoft.com/en-us/defender-endpoint/troubleshoot-microsoft-defender-antivirus?view=o365-worldwide
+https://github.com/redcanaryco/atomic-red-team/blob/5f866ca4517e837c4ea576e7309d0891e78080a8/atomics/T1040/T1040.md#atomic-test-16---powershell-network-sniffing
